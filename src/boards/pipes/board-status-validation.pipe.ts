@@ -1,4 +1,4 @@
-import { BoardStatus } from './../entities/board.entity';
+import { BoardStatus } from '../entities/board-status.enum';
 import {
   ArgumentMetadata,
   BadRequestException,
