@@ -1,36 +1,40 @@
 import { User } from './../auth/user.entity';
 import { BoardRepository } from './board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { BoardStatus } from './entities/board-status.enum';
 import { Board } from './board.entity';
 import { use } from 'passport';
 
 @Injectable()
 export class BoardsService {
+  private logger = new Logger('BoardsService');
   constructor(private boardRepository: BoardRepository) {}
 
-  createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
-    return this.boardRepository.createBoard(createBoardDto, user);
+  async getAllBoards() {
+    return await this.boardRepository.getAllBoards();
   }
 
-  async getUsersAllBoards(user: User): Promise<Board[]> {
-    const query = this.boardRepository.createQueryBuilder('board');
-
-    query.where('board.userId = :userId', { userId: user.id });
-
-    const boards = await query.getMany();
-    return boards;
+  async getAllUserBoards(user: User): Promise<Board[]> {
+    this.logger.verbose(`UserId ${user.id} trying to get all boards.`);
+    return await this.boardRepository.getAllUserBoards(user);
   }
 
-  async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne({ where: { id } });
+  async getBoardsByContent(content: string): Promise<Board[]> {
+    const found = await this.boardRepository.getBoardsByContent(content);
 
-    if (!found) {
-      throw new NotFoundException(`Can't find Board with id ${id}`);
+    if (found.length === 0) {
+      throw new NotFoundException(`Can't find Board with content ${content}`);
     }
 
     return found;
+  }
+
+  createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
+    this.logger.verbose(`UserId ${user.id} creating a new board.
+    Payload: ${JSON.stringify(createBoardDto)}`);
+    const { title, content } = createBoardDto;
+    return this.boardRepository.createBoard(title, content, user);
   }
 
   async deleteBoardById(id: number, user: User): Promise<void> {
@@ -43,11 +47,11 @@ export class BoardsService {
     console.log(result);
   }
 
-  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
-    const board = await this.getBoardById(id);
-    board.status = status;
-    await this.boardRepository.save(board);
+  // async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+  //   const board = await this.getBoardById(id);
+  //   board.status = status;
+  //   await this.boardRepository.save(board);
 
-    return board;
-  }
+  //   return board;
+  // }
 }

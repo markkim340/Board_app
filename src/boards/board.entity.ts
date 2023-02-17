@@ -3,9 +3,12 @@ import { BoardStatus } from './entities/board-status.enum';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -17,10 +20,19 @@ export class Board extends BaseEntity {
   title: string;
 
   @Column()
-  description: string;
+  content: string;
 
   @Column()
   status: BoardStatus;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 
   @ManyToOne((type) => User, (user) => user.boards, { eager: false })
   user: User;

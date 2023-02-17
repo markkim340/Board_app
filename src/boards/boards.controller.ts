@@ -13,6 +13,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -22,31 +23,32 @@ import { Board } from './board.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('boards')
-@UseGuards(AuthGuard())
 export class BoardsController {
   private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {}
 
-  @Get('/')
-  getUsersAllBoards(@GetUser() user: User): Promise<Board[]> {
-    this.logger.verbose(`User ${user.username} trying to get all boards.`);
-    return this.boardsService.getUsersAllBoards(user);
+  @Get()
+  getBoardsByContent(@Query('search') content: string): Promise<Board[]> {
+    return this.boardsService.getBoardsByContent(content);
   }
 
-  @Get('/:id')
-  getBoardById(@Param('id') id: number): Promise<Board> {
-    return this.boardsService.getBoardById(id);
+  @Get()
+  async getAllBoards() {
+    return await this.boardsService.getAllBoards();
+  }
+
+  @Get('/user')
+  @UseGuards(AuthGuard())
+  async getAllUserBoards(@GetUser() user: User): Promise<Board[]> {
+    return await this.boardsService.getAllUserBoards(user);
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
-  createBoard(
-    @Body() createBoardDto: CreateBoardDto,
-    @GetUser() user: User,
-  ): Promise<Board> {
-    this.logger.verbose(`User ${user.username} creating a new board.
+  @UseGuards(AuthGuard())
+  createBoard(@Body() createBoardDto: CreateBoardDto, @GetUser() user: User) {
+    this.logger.verbose(`User ${user.email} creating a new board.
     Payload: ${JSON.stringify(createBoardDto)}`);
-    return this.boardsService.createBoard(createBoardDto, user);
+    this.boardsService.createBoard(createBoardDto, user);
   }
 
   @Delete('/:id')
@@ -57,11 +59,11 @@ export class BoardsController {
     return this.boardsService.deleteBoardById(id, user);
   }
 
-  @Patch('/:id/status')
-  updateBoardStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  ): Promise<Board> {
-    return this.boardsService.updateBoardStatus(id, status);
-  }
+  // @Patch('/:id/status')
+  // updateBoardStatus(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body('status', BoardStatusValidationPipe) status: BoardStatus,
+  // ): Promise<Board> {
+  //   return this.boardsService.updateBoardStatus(id, status);
+  // }
 }

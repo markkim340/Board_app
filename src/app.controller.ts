@@ -5,6 +5,6 @@ import { get } from 'http';
 export class AppController {
   @Get()
   home() {
-    return 'This is NestJS Study';
+    return 'This is NestJS Board_app';
   }
 }

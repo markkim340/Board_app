@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcryptjs';
 import {
   ConflictException,
   Injectable,
@@ -14,18 +13,14 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async createUser(authCredentialDto: AuthCredentialDto): Promise<void> {
-    const { username, password } = authCredentialDto;
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const user = this.create({
-      username,
-      password: hashedPassword,
-    });
-
+  async createUser(email, nickname, hashedPassword): Promise<void> {
     try {
+      const user = this.create({
+        email,
+        nickname,
+        password: hashedPassword,
+      });
+
       await this.save(user);
     } catch (error) {
       if (error.code == '23505') {
