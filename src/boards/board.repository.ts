@@ -1,6 +1,5 @@
 import { User } from './../auth/user.entity';
 import { BoardStatus } from './entities/board-status.enum';
-import { CreateBoardDto } from './dto/create-board.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Like, Repository } from 'typeorm';
 import { Board } from './board.entity';
@@ -11,35 +10,29 @@ export class BoardRepository extends Repository<Board> {
     super(Board, dataSource.createEntityManager());
   }
 
-  async getAllBoards() {
+  async getAllBoards(): Promise<Array<Board[] | number>> {
     try {
-      return await this.createQueryBuilder('board')
-        .select([
-          'board.id',
-          'board.title',
-          'board.content',
-          'user.email',
-          'user.nickname',
-          'board.createdAt',
-        ])
-        .leftJoin('board.user', 'user')
-        .where('status = PUBLIC')
-        .where('board.deletedAt IS NULL')
-        .orderBy('board.createdAt', 'DESC')
-        .getManyAndCount();
+      return await this.findAndCount({
+        select: { user: { nickname: true } },
+        where: { status: BoardStatus.PUBLIC, deletedAt: null },
+        relations: ['user'],
+        order: { createdAt: 'DESC' },
+      });
     } catch (error) {
       throw new InternalServerErrorException();
     }
   }
 
-  async getAllUserBoards(user): Promise<Board[]> {
+  async getUserBoards(user: User): Promise<Board[]> {
     try {
-      return await this.createQueryBuilder('board')
-        .where('board.userId = :userId', { userId: user.id })
-        .where('status = PUBLIC')
-        .where('board.deletedAt IS NULL')
-        .orderBy('board.createdAt', 'DESC')
-        .getMany();
+      return await this.find({
+        select: {
+          user: { nickname: true },
+        },
+        where: { user: { id: user.id }, deletedAt: null },
+        relations: ['user'],
+        order: { createdAt: 'DESC' },
+      });
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -47,17 +40,22 @@ export class BoardRepository extends Repository<Board> {
 
   async getBoardsByContent(content: string): Promise<Board[]> {
     try {
-      return await this.createQueryBuilder('board')
-        .where('status = PUBLIC')
-        .where('content LIKE :content', { content: `%${content}%` })
-        .where('board.deletedAt IS NULL')
-        .getMany();
+      return await this.find({
+        select: { user: { nickname: true } },
+        where: {
+          content: Like(`%${content}%`),
+          status: BoardStatus.PUBLIC,
+          deletedAt: null,
+        },
+        relations: ['user'],
+        order: { createdAt: 'DESC' },
+      });
     } catch (error) {
       throw new InternalServerErrorException();
     }
   }
 
-  async createBoard(title, content, user: User): Promise<Board> {
+  createBoard(title: string, content: string, user: User): void {
     try {
       const board = this.create({
         title,
@@ -66,8 +64,28 @@ export class BoardRepository extends Repository<Board> {
         user,
       });
 
-      await this.save(board);
-      return board;
+      this.save(board);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getBoardById(id: number): Promise<Board[]> {
+    try {
+      return await this.findBy({ id });
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async deleteBoardById(id: number, user: User) {
+    try {
+      return await this.createQueryBuilder('board')
+        .leftJoin('board.user', 'user')
+        .where('board.id = :id', { id })
+        .andWhere('user.id = :userid', { userid: user.id })
+        .delete()
+        .execute();
     } catch (error) {
       throw new InternalServerErrorException();
     }

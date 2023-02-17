@@ -15,8 +15,6 @@ import {
   Post,
   Query,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { Board } from './board.entity';
@@ -28,30 +26,34 @@ export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Get()
-  getBoardsByContent(@Query('search') content: string): Promise<Board[]> {
-    return this.boardsService.getBoardsByContent(content);
+  getAllBoards(): Promise<Array<Board[] | number>> {
+    return this.boardsService.getAllBoards();
   }
 
-  @Get()
-  async getAllBoards() {
-    return await this.boardsService.getAllBoards();
+  @Get(':search')
+  getBoardsByContent(@Param('search') content: string): Promise<Board[]> {
+    return this.boardsService.getBoardsByContent(content);
   }
 
   @Get('/user')
   @UseGuards(AuthGuard())
-  async getAllUserBoards(@GetUser() user: User): Promise<Board[]> {
-    return await this.boardsService.getAllUserBoards(user);
+  getUserBoards(@GetUser() user: User): Promise<Board[]> {
+    return this.boardsService.getUserBoards(user);
   }
 
   @Post()
   @UseGuards(AuthGuard())
-  createBoard(@Body() createBoardDto: CreateBoardDto, @GetUser() user: User) {
+  createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User,
+  ): void {
     this.logger.verbose(`User ${user.email} creating a new board.
     Payload: ${JSON.stringify(createBoardDto)}`);
-    this.boardsService.createBoard(createBoardDto, user);
+    return this.boardsService.createBoard(createBoardDto, user);
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   deleteBoardById(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
@@ -59,11 +61,12 @@ export class BoardsController {
     return this.boardsService.deleteBoardById(id, user);
   }
 
-  // @Patch('/:id/status')
-  // updateBoardStatus(
+  // @Patch('/:id')
+  // updateBoardById(
   //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() createBoardDto: CreateBoardDto,
   //   @Body('status', BoardStatusValidationPipe) status: BoardStatus,
   // ): Promise<Board> {
-  //   return this.boardsService.updateBoardStatus(id, status);
+  //   return this.boardsService.updateBoardById(id, createBoardDto, status);
   // }
 }

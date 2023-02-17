@@ -35,6 +35,6 @@ export class User extends BaseEntity {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  @OneToMany((type) => Board, (board) => board.user, { eager: true })
+  @OneToMany((type) => Board, (board) => board.user, { eager: false })
   boards: Board[];
 }
