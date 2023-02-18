@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 
 @Injectable()

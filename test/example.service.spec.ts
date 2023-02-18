@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MoviesService } from './movies.service';
+import { MoviesService } from '../src/movies/movies.service';
 
 describe('MoviesService', () => {
   let service: MoviesService;
