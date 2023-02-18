@@ -1,3 +1,4 @@
+import { SignInUserDto } from './dto/signin-user.dto';
 import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
@@ -16,11 +17,11 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: '로그인' })
+  @ApiCreatedResponse({ description: '로그인 완료' })
   @Post('/signin')
   signIn(
-    @Body('email') email: string,
-    @Body('password') password: string,
+    @Body() signInUserDto: SignInUserDto,
   ): Promise<{ accessToken: string }> {
-    return this.authService.signIn(email, password);
+    return this.authService.signIn(signInUserDto);
   }
 }

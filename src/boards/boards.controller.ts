@@ -20,11 +20,25 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { Board } from './board.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer';
+import * as path from 'path';
+import * as fs from 'fs';
+
+try {
+  fs.readdirSync('uploads');
+} catch (error) {
+  console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+  fs.mkdirSync('uploads');
+}
 
 @ApiTags('Boards')
 @Controller('boards')
@@ -58,14 +72,29 @@ export class BoardsController {
   @ApiCreatedResponse({ description: '게시글 작성완료' })
   @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
   @Post()
+  @UseInterceptors(
+    FilesInterceptor('file', 10, {
+      storage: multer.diskStorage({
+        destination(req, file, cb) {
+          cb(null, 'uploads/');
+        },
+        filename(req, file, cb) {
+          const ext = path.extname(file.originalname);
+          cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+        },
+      }),
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    }),
+  )
   @UseGuards(AuthGuard())
   createBoard(
-    @Body() createBoardDto: CreateBoardDto,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body(BoardStatusValidationPipe) createBoardDto: CreateBoardDto,
     @GetUser() user: User,
   ): void {
-    this.logger.verbose(`User ${user.email} creating a new board.
+    this.logger.verbose(`UserId ${user.id} creating a new board.
     Payload: ${JSON.stringify(createBoardDto)}`);
-    return this.boardsService.createBoard(createBoardDto, user);
+    return this.boardsService.createBoard(files, createBoardDto, user);
   }
 
   @ApiOperation({ summary: '게시글 삭제하기' })

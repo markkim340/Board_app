@@ -1,3 +1,4 @@
+import { SignInUserDto } from './dto/signin-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,13 +25,18 @@ export class AuthService {
     );
   }
 
-  async signIn(email, password): Promise<{ accessToken: string }> {
-    const user = await this.userRepository.findOne({ where: { email } });
+  async signIn(signInUserDto): Promise<{ accessToken: string }> {
+    const { email, password } = signInUserDto;
+
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { password },
+    });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       //유저토큰생성 (Secret + Payload)
       const payload = { email };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
 
       return { accessToken: accessToken };
     } else {

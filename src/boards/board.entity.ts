@@ -22,6 +22,9 @@ export class Board extends BaseEntity {
   @Column()
   content: string;
 
+  @Column({ nullable: true })
+  file: string;
+
   @Column()
   status: BoardStatus;
 

@@ -16,6 +16,11 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
   const SwaggerConfig = new DocumentBuilder()
     .setTitle('Board_app API Docs_Made By 김민우')
     .setDescription('반갑습니다. NestJS Board_app 개발을 위한 API 문서입니다.')

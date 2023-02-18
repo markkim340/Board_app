@@ -55,12 +55,19 @@ export class BoardRepository extends Repository<Board> {
     }
   }
 
-  createBoard(title: string, content: string, user: User): void {
+  createBoard(
+    title: string,
+    content: string,
+    status: BoardStatus,
+    file: string,
+    user: User,
+  ): void {
     try {
       const board = this.create({
         title,
         content,
-        status: BoardStatus.PUBLIC,
+        status,
+        file,
         user,
       });
 

@@ -1,3 +1,4 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from './../auth/user.entity';
 import { BoardRepository } from './board.repository';
@@ -33,12 +34,17 @@ export class BoardsService {
     return foundBoard;
   }
 
-  createBoard(createBoardDto: CreateBoardDto, user: User): void {
+  createBoard(
+    files: Express.Multer.File[],
+    createBoardDto: CreateBoardDto,
+    user: User,
+  ): void {
     this.logger.verbose(`UserId ${user.id} creating a new board.
     Payload: ${JSON.stringify(createBoardDto)}`);
-    const { title, content } = createBoardDto;
+    const { title, content, status } = createBoardDto;
+    const file = files.length !== 0 ? files[0].path : null;
 
-    this.boardRepository.createBoard(title, content, user);
+    this.boardRepository.createBoard(title, content, status, file, user);
   }
 
   async deleteBoardById(id: number, user: User): Promise<void> {
@@ -61,7 +67,7 @@ export class BoardsService {
     user,
   ): Promise<Board> {
     const board = await this.boardRepository.getBoardById(id);
-    if (!board.user.id !== user.id) throw new UnauthorizedException();
+    if (board.user.id !== user.id) throw new UnauthorizedException();
 
     const { title, content, status } = updateBoardDto;
     if (title) board.title = title;

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BoardStatus } from './../entities/board-status.enum';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateBoardDto {
   @ApiProperty({
@@ -18,6 +18,13 @@ export class CreateBoardDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @ApiProperty({
+    example: 'smile.jpg',
+    description: '파일을 첨부할 경우',
+  })
+  @IsOptional()
+  file: string;
 
   @ApiProperty({
     example: 'public',
