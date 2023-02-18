@@ -1,3 +1,5 @@
+import { PartialType } from '@nestjs/swagger';
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from './../auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -61,12 +63,13 @@ export class BoardsController {
     return this.boardsService.deleteBoardById(id, user);
   }
 
-  // @Patch('/:id')
-  // updateBoardById(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() createBoardDto: CreateBoardDto,
-  //   @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  // ): Promise<Board> {
-  //   return this.boardsService.updateBoardById(id, createBoardDto, status);
-  // }
+  @Patch('/:id')
+  @UseGuards(AuthGuard())
+  updateBoardById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(BoardStatusValidationPipe) updateBoardDto: UpdateBoardDto,
+    @GetUser() user: User,
+  ): Promise<Board> {
+    return this.boardsService.updateBoardById(id, updateBoardDto, user);
+  }
 }

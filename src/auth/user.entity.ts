@@ -23,16 +23,16 @@ export class User extends BaseEntity {
   @Column()
   nickname: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ select: false })
   deletedAt: Date | null;
 
   @OneToMany((type) => Board, (board) => board.user, { eager: false })

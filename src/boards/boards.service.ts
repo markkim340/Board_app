@@ -1,3 +1,4 @@
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from './../auth/user.entity';
 import { BoardRepository } from './board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -7,7 +8,6 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { BoardStatus } from './entities/board-status.enum';
 import { Board } from './board.entity';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class BoardsService {
 
   async deleteBoardById(id: number, user: User): Promise<void> {
     const foundBoard = await this.boardRepository.getBoardById(id);
-    if (foundBoard.length === 0) {
+    if (!foundBoard) {
       throw new NotFoundException(`Can't find board with id ${id}`);
     }
 
@@ -55,11 +55,19 @@ export class BoardsService {
     if (deleteBoardById.affected === 0) throw new UnauthorizedException();
   }
 
-  // async updateBoardById(id: number, status: BoardStatus): Promise<Board> {
-  //   const board = await this.getBoardById(id);
-  //   board.status = status;
-  //   await this.boardRepository.save(board);
+  async updateBoardById(
+    id: number,
+    updateBoardDto: UpdateBoardDto,
+    user,
+  ): Promise<Board> {
+    const board = await this.boardRepository.getBoardById(id);
+    if (!board.user.id !== user.id) throw new UnauthorizedException();
 
-  //   return board;
-  // }
+    const { title, content, status } = updateBoardDto;
+    if (title) board.title = title;
+    if (content) board.content = content;
+    if (status) board.status = status;
+
+    return await this.boardRepository.save(board);
+  }
 }

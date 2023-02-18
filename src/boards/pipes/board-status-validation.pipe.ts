@@ -9,12 +9,13 @@ export class BoardStatusValidationPipe implements PipeTransform {
   readonly StatusOptions = [BoardStatus.PRIVATE, BoardStatus.PUBLIC];
 
   transform(value: any, metadata: ArgumentMetadata) {
-    value = value.toUpperCase();
+    const status = value.status.toUpperCase();
 
-    if (!this.isStatusValid(value)) {
-      throw new BadRequestException(`${value} isn't in the Status`);
+    if (!this.isStatusValid(status)) {
+      throw new BadRequestException(`${value.status} isn't in the Status`);
     }
 
+    value.status = status;
     return value;
   }
 

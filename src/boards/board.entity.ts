@@ -31,7 +31,7 @@ export class Board extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ select: false })
   deletedAt: Date | null;
 
   @ManyToOne((type) => User, (user) => user.boards, { eager: false })

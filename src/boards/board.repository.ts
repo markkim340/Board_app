@@ -70,9 +70,9 @@ export class BoardRepository extends Repository<Board> {
     }
   }
 
-  async getBoardById(id: number): Promise<Board[]> {
+  async getBoardById(id: number): Promise<Board> {
     try {
-      return await this.findBy({ id });
+      return await this.findOne({ where: { id }, relations: ['user'] });
     } catch (error) {
       throw new InternalServerErrorException();
     }
