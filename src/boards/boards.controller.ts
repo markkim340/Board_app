@@ -46,19 +46,19 @@ export class BoardsController {
   private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {}
 
-  @ApiOperation({ summary: '게시판 전체 글 가져오기' })
+  @ApiOperation({ summary: '게시글 전체 조회' })
   @Get()
   getAllBoards(): Promise<Array<Board[] | number>> {
     return this.boardsService.getAllBoards();
   }
 
-  @ApiOperation({ summary: '작성 내용으로 게시글 검색하기' })
+  @ApiOperation({ summary: '작성 내용으로 게시글 검색' })
   @Get(':search')
   getBoardsByContent(@Param('search') content: string): Promise<Board[]> {
     return this.boardsService.getBoardsByContent(content);
   }
 
-  @ApiOperation({ summary: '로그인한 유저의 게시글 가져오기' })
+  @ApiOperation({ summary: '로그인한 유저의 게시글 조회' })
   @ApiBearerAuth()
   @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
   @Get('/user')
@@ -67,7 +67,7 @@ export class BoardsController {
     return this.boardsService.getUserBoards(user);
   }
 
-  @ApiOperation({ summary: '게시글 작성하기' })
+  @ApiOperation({ summary: '게시글 작성' })
   @ApiBearerAuth()
   @ApiCreatedResponse({ description: '게시글 작성완료' })
   @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
@@ -97,7 +97,7 @@ export class BoardsController {
     return this.boardsService.createBoard(files, createBoardDto, user);
   }
 
-  @ApiOperation({ summary: '게시글 삭제하기' })
+  @ApiOperation({ summary: '게시글 삭제' })
   @ApiBearerAuth()
   @ApiCreatedResponse({ description: '게시글 삭제완료' })
   @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
@@ -110,7 +110,7 @@ export class BoardsController {
     return this.boardsService.deleteBoardById(id, user);
   }
 
-  @ApiOperation({ summary: '게시글 수정하기' })
+  @ApiOperation({ summary: '게시글 수정' })
   @ApiBearerAuth()
   @ApiCreatedResponse({ description: '게시글 수정완료' })
   @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })

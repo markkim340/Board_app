@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from './../auth/user.entity';
-import { BoardRepository } from './board.repository';
+import { BoardRepository } from './boards.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import {
   Injectable,
@@ -42,9 +42,10 @@ export class BoardsService {
     this.logger.verbose(`UserId ${user.id} creating a new board.
     Payload: ${JSON.stringify(createBoardDto)}`);
     const { title, content, status } = createBoardDto;
-    const file = files.length !== 0 ? files[0].path : null;
 
-    this.boardRepository.createBoard(title, content, status, file, user);
+    const file = files ? files[0].path : null;
+
+    return this.boardRepository.createBoard(title, content, status, file, user);
   }
 
   async deleteBoardById(id: number, user: User): Promise<void> {

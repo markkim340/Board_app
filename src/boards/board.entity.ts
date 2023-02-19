@@ -7,9 +7,11 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class Board extends BaseEntity {
@@ -39,4 +41,7 @@ export class Board extends BaseEntity {
 
   @ManyToOne((type) => User, (user) => user.boards, { eager: false })
   user: User;
+
+  @OneToMany(() => Comment, (comment) => comment.board, { cascade: true })
+  comments: Comment[];
 }

@@ -21,7 +21,7 @@ export class CreateBoardDto {
 
   @ApiProperty({
     example: 'smile.jpg',
-    description: '파일을 첨부할 경우',
+    description: '파일을 첨부할 경우 / 없을 경우 null',
   })
   @IsOptional()
   file: string;

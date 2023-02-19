@@ -1,4 +1,4 @@
-import { User } from './../auth/user.entity';
+import { User } from '../auth/user.entity';
 import { BoardStatus } from './entities/board-status.enum';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Like, Repository } from 'typeorm';
@@ -13,12 +13,21 @@ export class BoardRepository extends Repository<Board> {
   async getAllBoards(): Promise<Array<Board[] | number>> {
     try {
       return await this.findAndCount({
-        select: { user: { nickname: true } },
+        select: {
+          user: { nickname: true },
+          comments: {
+            id: true,
+            content: true,
+            updatedAt: true,
+            user: { nickname: true },
+          },
+        },
         where: { status: BoardStatus.PUBLIC, deletedAt: null },
-        relations: ['user'],
+        relations: ['user', 'comments', 'comments.user'],
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }
@@ -34,6 +43,7 @@ export class BoardRepository extends Repository<Board> {
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }
@@ -51,6 +61,7 @@ export class BoardRepository extends Repository<Board> {
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }
@@ -73,6 +84,7 @@ export class BoardRepository extends Repository<Board> {
 
       this.save(board);
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }
@@ -94,6 +106,7 @@ export class BoardRepository extends Repository<Board> {
         .delete()
         .execute();
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }

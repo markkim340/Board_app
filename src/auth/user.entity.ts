@@ -10,6 +10,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 @Unique(['email'])
@@ -37,4 +38,7 @@ export class User extends BaseEntity {
 
   @OneToMany((type) => Board, (board) => board.user, { eager: false })
   boards: Board[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment;
 }

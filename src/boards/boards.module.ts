@@ -1,5 +1,5 @@
 import { AuthModule } from './../auth/auth.module';
-import { BoardRepository } from './board.repository';
+import { BoardRepository } from './boards.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { BoardsController } from './boards.controller';

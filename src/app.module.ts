@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MorganModule, MorganInterceptor } from 'nest-morgan';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     TypeOrmModule.forRoot(typeORMConfig),
     BoardsModule,
     AuthModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [
