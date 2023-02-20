@@ -17,7 +17,7 @@ export class UpdateBoardDto extends PartialType(CreateBoardDto) {
   content: string;
 
   @ApiProperty({
-    example: 'smile.jpg',
+    example: '',
     description: '파일을 첨부할 경우 / 없을 경우 null',
   })
   file: string;

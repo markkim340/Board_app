@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UpdateCommentDto {
   @ApiProperty({
-    example: '5',
+    example: '1',
     description: '댓글 id',
   })
   @IsNotEmpty()
@@ -11,7 +11,7 @@ export class UpdateCommentDto {
   id: number;
 
   @ApiProperty({
-    example: '응~수정~',
+    example: '등록 희망합니다',
     description: '수정할 내용',
   })
   @IsNotEmpty()

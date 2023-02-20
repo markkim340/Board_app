@@ -25,14 +25,14 @@ import {
 } from '@nestjs/swagger';
 
 @ApiTags('comments')
-@ApiUnauthorizedResponse({ description: '로그인 후 이용가능' })
+@ApiBearerAuth('access_token')
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @ApiResponse({ status: 500, description: 'Server Error' })
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @ApiOperation({ summary: '댓글 생성' })
-  @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '댓글 생성 성공' })
   @Post()
   @UseGuards(AuthGuard())
@@ -44,7 +44,6 @@ export class CommentsController {
   }
 
   @ApiOperation({ summary: '댓글 수정' })
-  @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '댓글 수정 성공' })
   @Patch()
   @UseGuards(AuthGuard())
@@ -56,7 +55,6 @@ export class CommentsController {
   }
 
   @ApiOperation({ summary: '댓글 삭제' })
-  @ApiBearerAuth('access_token')
   @ApiResponse({ status: 204, description: '댓글 삭제 성공' })
   @Delete(':id')
   @UseGuards(AuthGuard())

@@ -65,15 +65,16 @@ export class BoardsController {
 
   @ApiOperation({ summary: '작성 내용으로 게시글 검색' })
   @ApiResponse({ status: 200, description: '조회 성공' })
-  @Get(':search')
+  @Get('search/:search')
   getBoardsByContent(@Param('search') content: string): Promise<Board[]> {
+    console.log(content);
     return this.boardsService.getBoardsByContent(content);
   }
 
   @ApiOperation({ summary: '로그인한 유저의 게시글 조회' })
   @ApiBearerAuth('access_token')
   @ApiResponse({ status: 200, description: '조회 성공' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용 가능' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Get('/user')
   @UseGuards(AuthGuard())
   getUserBoards(@GetUser() user: User): Promise<Board[]> {
@@ -83,7 +84,7 @@ export class BoardsController {
   @ApiOperation({ summary: '게시글 작성' })
   @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '게시글 작성완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용 가능' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Post()
   @UseInterceptors(
     FilesInterceptor('file', 10, {
@@ -112,8 +113,8 @@ export class BoardsController {
 
   @ApiOperation({ summary: '게시글 삭제' })
   @ApiBearerAuth('access_token')
-  @ApiCreatedResponse({ description: '게시글 삭제완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능' })
+  @ApiResponse({ status: 204, description: '게시글 삭제완료' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Delete('/:id')
   @UseGuards(AuthGuard())
   deleteBoardById(
@@ -126,7 +127,7 @@ export class BoardsController {
   @ApiOperation({ summary: '게시글 수정' })
   @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '게시글 수정완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Patch('/:id')
   @UseGuards(AuthGuard())
   updateBoardById(

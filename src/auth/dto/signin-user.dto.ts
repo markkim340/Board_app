@@ -9,7 +9,7 @@ export class SignInUserDto extends PartialType(CreateUserDto) {
   email: string;
 
   @ApiProperty({
-    example: '1234qwer',
+    example: 'test1234@',
   })
   password: string;
 }

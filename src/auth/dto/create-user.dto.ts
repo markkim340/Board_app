@@ -20,7 +20,7 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    example: '익명의카멜레온',
+    example: 'testman',
     description: '4자리 이상 20자리 이하의 문자',
   })
   @IsString()
@@ -30,7 +30,7 @@ export class CreateUserDto {
   nickname: string;
 
   @ApiProperty({
-    example: '1234qwer',
+    example: 'test1234@',
     description: '8자리 이상 16자리 이하의 비밀번호 형식',
   })
   @IsString()
