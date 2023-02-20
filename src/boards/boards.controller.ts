@@ -1,6 +1,7 @@
 import {
   ApiAcceptedResponse,
   ApiBearerAuth,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOperation,
   ApiResponse,

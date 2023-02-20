@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiConsumes, ApiProperty } from '@nestjs/swagger';
 import { BoardStatus } from './../entities/board-status.enum';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 

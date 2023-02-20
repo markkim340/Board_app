@@ -396,3 +396,7 @@ Temporary Items
 # Local
 .env
 dist
+
+config/default.yml
+config/development.yml
+config/production.yml
