@@ -15,15 +15,10 @@ export class BoardRepository extends Repository<Board> {
       return await this.findAndCount({
         select: {
           user: { nickname: true },
-          comments: {
-            id: true,
-            content: true,
-            updatedAt: true,
-            user: { nickname: true },
-          },
+          comments: { content: true },
         },
         where: { status: BoardStatus.PUBLIC, deletedAt: null },
-        relations: ['user', 'comments', 'comments.user'],
+        relations: ['user', 'comments'],
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
@@ -79,6 +74,7 @@ export class BoardRepository extends Repository<Board> {
         content,
         status,
         file,
+        views: 0,
         user,
       });
 
@@ -91,7 +87,10 @@ export class BoardRepository extends Repository<Board> {
 
   async getBoardById(id: number): Promise<Board> {
     try {
-      return await this.findOne({ where: { id }, relations: ['user'] });
+      return await this.findOne({
+        where: { id },
+        relations: ['user', 'comments', 'comments.user'],
+      });
     } catch (error) {
       throw new InternalServerErrorException();
     }

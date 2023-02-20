@@ -20,6 +20,16 @@ export class BoardsService {
     return await this.boardRepository.getAllBoards();
   }
 
+  async getBoardById(id: number): Promise<Board> {
+    const board = await this.boardRepository.getBoardById(id);
+    if (!board) throw new NotFoundException(`Can't find board with id ${id}`);
+
+    board.views++;
+    await this.boardRepository.save(board);
+
+    return board;
+  }
+
   async getUserBoards(user: User): Promise<Board[]> {
     this.logger.verbose(`UserId ${user.id} trying to get all boards.`);
     return await this.boardRepository.getUserBoards(user);

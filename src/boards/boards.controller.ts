@@ -1,7 +1,9 @@
 import {
+  ApiAcceptedResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -41,26 +43,37 @@ try {
 }
 
 @ApiTags('Boards')
+@ApiResponse({ status: 500, description: 'Server Error' })
 @Controller('boards')
 export class BoardsController {
   private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {}
 
   @ApiOperation({ summary: '게시글 전체 조회' })
+  @ApiResponse({ status: 200, description: '조회 성공' })
   @Get()
   getAllBoards(): Promise<Array<Board[] | number>> {
     return this.boardsService.getAllBoards();
   }
 
+  @ApiOperation({ summary: '게시글 조회' })
+  @ApiResponse({ status: 200, description: '조회 성공' })
+  @Get(':id')
+  getBoardById(@Param('id') id: number): Promise<Board> {
+    return this.boardsService.getBoardById(id);
+  }
+
   @ApiOperation({ summary: '작성 내용으로 게시글 검색' })
+  @ApiResponse({ status: 200, description: '조회 성공' })
   @Get(':search')
   getBoardsByContent(@Param('search') content: string): Promise<Board[]> {
     return this.boardsService.getBoardsByContent(content);
   }
 
   @ApiOperation({ summary: '로그인한 유저의 게시글 조회' })
-  @ApiBearerAuth()
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
+  @ApiBearerAuth('access_token')
+  @ApiResponse({ status: 200, description: '조회 성공' })
+  @ApiUnauthorizedResponse({ description: '로그인 후 이용 가능' })
   @Get('/user')
   @UseGuards(AuthGuard())
   getUserBoards(@GetUser() user: User): Promise<Board[]> {
@@ -68,9 +81,9 @@ export class BoardsController {
   }
 
   @ApiOperation({ summary: '게시글 작성' })
-  @ApiBearerAuth()
+  @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '게시글 작성완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
+  @ApiUnauthorizedResponse({ description: '로그인 후 이용 가능' })
   @Post()
   @UseInterceptors(
     FilesInterceptor('file', 10, {
@@ -98,9 +111,9 @@ export class BoardsController {
   }
 
   @ApiOperation({ summary: '게시글 삭제' })
-  @ApiBearerAuth()
+  @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '게시글 삭제완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
+  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능' })
   @Delete('/:id')
   @UseGuards(AuthGuard())
   deleteBoardById(
@@ -111,9 +124,9 @@ export class BoardsController {
   }
 
   @ApiOperation({ summary: '게시글 수정' })
-  @ApiBearerAuth()
+  @ApiBearerAuth('access_token')
   @ApiCreatedResponse({ description: '게시글 수정완료' })
-  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능.' })
+  @ApiUnauthorizedResponse({ description: '로그인 후 이용가능' })
   @Patch('/:id')
   @UseGuards(AuthGuard())
   updateBoardById(

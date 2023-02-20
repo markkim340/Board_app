@@ -25,7 +25,7 @@ export class AuthService {
     );
   }
 
-  async signIn(signInUserDto): Promise<{ accessToken: string }> {
+  async signIn(signInUserDto): Promise<{ access_token: string }> {
     const { email, password } = signInUserDto;
 
     const user = await this.userRepository.findOne({
@@ -38,7 +38,7 @@ export class AuthService {
       const payload = { email };
       const accessToken = this.jwtService.sign(payload);
 
-      return { accessToken: accessToken };
+      return { access_token: accessToken };
     } else {
       throw new UnauthorizedException('logIn failed');
     }

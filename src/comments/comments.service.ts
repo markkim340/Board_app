@@ -47,7 +47,6 @@ export class CommentsService {
       where: { id },
       relations: ['user'],
     });
-    console.log(comment);
     if (!comment) {
       throw new NotFoundException(`comment ${id} not found`);
     } else if (comment.user.id !== user.id) throw new UnauthorizedException();

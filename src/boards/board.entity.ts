@@ -12,6 +12,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { BoardLikes } from './boardLikes.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Board extends BaseEntity {
@@ -30,6 +32,9 @@ export class Board extends BaseEntity {
   @Column()
   status: BoardStatus;
 
+  @Column()
+  views: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -44,4 +49,7 @@ export class Board extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.board, { cascade: true })
   comments: Comment[];
+
+  @OneToMany(() => BoardLikes, (likes) => likes.board, { cascade: true })
+  likes: BoardLikes[];
 }

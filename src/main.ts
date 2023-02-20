@@ -2,7 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as config from 'config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
 
@@ -42,12 +46,34 @@ async function bootstrap() {
 
   const SwaggerConfig = new DocumentBuilder()
     .setTitle('Board_app API Docs_Made By 김민우')
-    .setDescription('반갑습니다. NestJS Board_app 개발을 위한 API 문서입니다.')
+    .setDescription(
+      `반갑습니다.\n
+      주니어 백엔드 개발자 김민우의 미니 프로젝트 NestJS Board_app 개발을 위한 API 문서입니다. 
+      로그인이 필요한 기능은 토큰을 발급받아 사용자 인증 후 이용바랍니다.`,
+    )
     .setVersion('1.0')
-    .addCookieAuth('connect.sid')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access_token',
+    )
+    // .addCookieAuth('connect.sid')
     .build();
+
+  const swaggerCustomOptions: SwaggerCustomOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  };
+
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, swaggerCustomOptions);
 
   const port = serverConfig.port;
   await app.listen(port);
