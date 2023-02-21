@@ -1,0 +1,25 @@
+version: '1'
+
+services:
+  backend:
+    build: ./
+    container_name: boardapp
+    environment:
+    ports: '3000:3000'
+    depends_on:
+      - database
+    networks:
+      - boardapp_network
+
+  database:
+    image: postgres
+    container_name: boardapp_db
+    ports: '5432:5432'
+    volumes:
+      - './postgres-backup:/data/db'
+    networks:
+      - boardapp_network
+
+networks:
+  boardapp_network:
+    driver: bridge
