@@ -397,6 +397,6 @@ Temporary Items
 .env
 dist
 
-config/default.yml
-config/development.yml
-config/production.yml
+# config/default.yml
+# config/development.yml
+# config/production.yml

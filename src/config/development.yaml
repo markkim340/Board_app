@@ -1,0 +1,6 @@
+server:
+  port: 3333
+
+jwt:
+  secret: 'secretKey'
+  expiresIn: 3600

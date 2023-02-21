@@ -5,6 +5,7 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -43,6 +44,7 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.9.0",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^4.1.2",
     "rxjs": "^7.5.5",
     "swagger-ui-express": "^4.6.0",
     "typeorm": "^0.3.11",

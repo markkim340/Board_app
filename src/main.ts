@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import * as config from 'config';
 import {
   DocumentBuilder,
   SwaggerCustomOptions,
@@ -9,10 +8,11 @@ import {
 } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const serverConfig = config.get<any>('server');
+  const configService = app.get(ConfigService);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -75,7 +75,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
   SwaggerModule.setup('api', app, document, swaggerCustomOptions);
 
-  const port = serverConfig.port;
+  const port = configService.get('server.port');
   await app.listen(port);
   Logger.log(`🔰 Application running on port ${port}`);
 }
