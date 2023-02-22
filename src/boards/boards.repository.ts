@@ -29,6 +29,7 @@ export class BoardRepository extends Repository<Board> {
 
   async getUserBoards(user: User): Promise<Board[]> {
     try {
+      console.log(user);
       return await this.find({
         select: {
           user: { nickname: true },

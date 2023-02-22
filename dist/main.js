@@ -14,6 +14,7 @@ async function bootstrap() {
         forbidNonWhitelisted: true,
         transform: true,
     }));
+    console.log(configService.get('jwt.expiresIn'));
     app.enableCors({
         origin: true,
         credentials: true,

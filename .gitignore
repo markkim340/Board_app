@@ -395,8 +395,8 @@ Temporary Items
 =======
 # Local
 .env
-# dist
-
+dist
+docker.env
 # config/default.yml
 # config/development.yml
 # config/production.yml

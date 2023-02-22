@@ -41,15 +41,16 @@ let BoardsController = class BoardsController {
     getAllBoards() {
         return this.boardsService.getAllBoards();
     }
-    getBoardById(id) {
-        return this.boardsService.getBoardById(id);
-    }
     getBoardsByContent(content) {
         console.log(content);
         return this.boardsService.getBoardsByContent(content);
     }
     getUserBoards(user) {
         return this.boardsService.getUserBoards(user);
+    }
+    getBoardById(id) {
+        console.log('여기');
+        return this.boardsService.getBoardById(id);
     }
     createBoard(files, createBoardDto, user) {
         this.logger.verbose(`UserId ${user.id} creating a new board.
@@ -72,15 +73,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "getAllBoards", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: '게시글 조회' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: '조회 성공' }),
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], BoardsController.prototype, "getBoardById", null);
-__decorate([
     (0, swagger_1.ApiOperation)({ summary: '작성 내용으로 게시글 검색' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: '조회 성공' }),
     (0, common_1.Get)('search/:search'),
@@ -101,6 +93,15 @@ __decorate([
     __metadata("design:paramtypes", [user_entity_1.User]),
     __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "getUserBoards", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: '게시글 조회' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: '조회 성공' }),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "getBoardById", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: '게시글 작성' }),
     (0, swagger_1.ApiBearerAuth)('access_token'),

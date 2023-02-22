@@ -32,7 +32,6 @@ export class AuthService {
       where: { email },
       select: { password },
     });
-
     if (user && (await bcrypt.compare(password, user.password))) {
       //유저토큰생성 (Secret + Payload)
       const payload = { email };

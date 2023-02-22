@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -21,6 +20,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  console.log(configService.get('jwt.expiresIn'));
 
   app.enableCors({
     origin: true,

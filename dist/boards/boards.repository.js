@@ -38,6 +38,7 @@ let BoardRepository = class BoardRepository extends typeorm_1.Repository {
     }
     async getUserBoards(user) {
         try {
+            console.log(user);
             return await this.find({
                 select: {
                     user: { nickname: true },

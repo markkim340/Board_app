@@ -1,32 +1,30 @@
-# #build stage
-# FROM node:18-alpine AS build
-# RUN mkdir -p /var/app
-# WORKDIR /var/app
-# COPY package*.json ./
-# RUN npm install
-# COPY . .
-# RUN npm run build
+FROM node:18-alpine As development
 
+WORKDIR /usr/src/app
 
+COPY package*.json ./
 
-# #prod stage
-# FROM node:18-alpine
-# WORKDIR /var/app
-# ARG NODE_ENV=production
-# ENV NODE_ENV=${NODE_ENV}
-# COPY --from=build /var/app/dist ./
-# COPY package*.json ./
-# RUN npm install --only=production
-# RUN rm package*.json
-# EXPOSE 3000
-# CMD ["node", "dist/main.js"]
+RUN npm install --only=development
 
-
-FROM node:18
-RUN mkdir -p /var/app
-WORKDIR /var/app
 COPY . .
-RUN npm install
+
 RUN npm run build
+
+FROM node:18-alpine as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --only=production
+
+COPY . .
+
+COPY --from=development /usr/src/app/dist ./dist
+
 EXPOSE 3000
-CMD [ "node", "dist/main.js" ]
+
+CMD ["node", "dist/main"]

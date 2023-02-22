@@ -16,7 +16,7 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get('jwt.secret'),
-        signOptions: { expiresIn: `${configService.get('jwt.expiresIn')}` },
+        signOptions: { expiresIn: `${configService.get('jwt.expiresIn')}s` },
       }),
     }),
     TypeOrmModule.forFeature([UserRepository]),

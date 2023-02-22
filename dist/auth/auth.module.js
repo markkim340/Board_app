@@ -27,7 +27,7 @@ AuthModule = __decorate([
                 inject: [config_1.ConfigService],
                 useFactory: async (configService) => ({
                     secret: configService.get('jwt.secret'),
-                    signOptions: { expiresIn: `${configService.get('jwt.expiresIn')}` },
+                    signOptions: { expiresIn: `${configService.get('jwt.expiresIn')}s` },
                 }),
             }),
             typeorm_1.TypeOrmModule.forFeature([auth_repository_1.UserRepository]),

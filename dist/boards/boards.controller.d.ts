@@ -9,9 +9,9 @@ export declare class BoardsController {
     private logger;
     constructor(boardsService: BoardsService);
     getAllBoards(): Promise<Array<Board[] | number>>;
-    getBoardById(id: number): Promise<Board>;
     getBoardsByContent(content: string): Promise<Board[]>;
     getUserBoards(user: User): Promise<Board[]>;
+    getBoardById(id: number): Promise<Board>;
     createBoard(files: Express.Multer.File[], createBoardDto: CreateBoardDto, user: User): void;
     deleteBoardById(id: number, user: User): Promise<void>;
     updateBoardById(id: number, updateBoardDto: UpdateBoardDto, user: User): Promise<Board>;

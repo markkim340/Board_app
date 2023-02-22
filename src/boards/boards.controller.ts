@@ -57,13 +57,6 @@ export class BoardsController {
     return this.boardsService.getAllBoards();
   }
 
-  @ApiOperation({ summary: '게시글 조회' })
-  @ApiResponse({ status: 200, description: '조회 성공' })
-  @Get(':id')
-  getBoardById(@Param('id') id: number): Promise<Board> {
-    return this.boardsService.getBoardById(id);
-  }
-
   @ApiOperation({ summary: '작성 내용으로 게시글 검색' })
   @ApiResponse({ status: 200, description: '조회 성공' })
   @Get('search/:search')
@@ -80,6 +73,15 @@ export class BoardsController {
   @UseGuards(AuthGuard())
   getUserBoards(@GetUser() user: User): Promise<Board[]> {
     return this.boardsService.getUserBoards(user);
+  }
+
+  @ApiOperation({ summary: '게시글 조회' })
+  @ApiResponse({ status: 200, description: '조회 성공' })
+  @Get(':id')
+  getBoardById(@Param('id') id: number): Promise<Board> {
+    console.log('여기');
+
+    return this.boardsService.getBoardById(id);
   }
 
   @ApiOperation({ summary: '게시글 작성' })

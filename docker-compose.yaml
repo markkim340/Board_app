@@ -1,31 +1,30 @@
-version: '1'
-
+version: '3.8'
 services:
-  backend:
-    build: ./
-    container_name: boardapp
-    environment:
-      - NODE_ENV=production
-      - DB_USERNAME = postgres
-      - DB_PASSWORD = postgres
-      - DB_DATABASE = boardapp
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
     ports:
       - '3000:3000'
+    expose:
+      - 3000
     depends_on:
-      - database
-    networks:
-      - boardapp_network
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=boardapp
+      - POSTGRES_PORT=5432
 
-  database:
+  postgres:
+    container_name: postgres
     image: postgres
-    container_name: boardapp_db
     ports:
       - '5432:5432'
-    volumes:
-      - './postgres-backup:/data/db'
-    networks:
-      - boardapp_network
-
-networks:
-  boardapp_network:
-    driver: bridge
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: boardapp
+    expose:
+      - 5432

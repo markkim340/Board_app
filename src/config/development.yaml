@@ -3,4 +3,4 @@ server:
 
 jwt:
   secret: 'secretKey'
-  expiresIn: 3600
+  expiresIn: 10800
