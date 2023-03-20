@@ -1,11 +1,6 @@
 # 📋 Board_app 
 NestJS를 사용하여 게시판 서비스를 개발한 개인 프로젝트 입니다.
 
-## 배포
-- aws-EC2 / Docker compose
-- http://ec2-13-209-5-70.ap-northeast-2.compute.amazonaws.com:3000
-- Swagger API docs : http://ec2-13-209-5-70.ap-northeast-2.compute.amazonaws.com:3000/api
-
 ## 설명
 - 프로젝트 기간 : 22-02-17 ~ 22-02-21 (5 Days)
 - 사용된 기술 : NestJS, PostgreSQL, TypeORM, Multer, bcyrpt, JWT, Docker, aws-EC2
